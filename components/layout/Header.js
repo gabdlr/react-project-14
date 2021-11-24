@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Buscar from '../ui/Buscar';
 import Navegacion from './Navegacion';
 import Link from 'next/dist/client/link';
 import styled from 'styled-components';
 import { css } from 'styled-components';
 import Boton from '../ui/Boton';
+import { FirebaseContext } from '../../firebase';
 
 const ContendorHeader = styled.div`
     max-width:1200px;
@@ -24,10 +25,8 @@ font-family: 'Roboto Slab', serif;
 margin-right: 2rem;
 `;
 
-const usuario = false;
-
-
 const Header = () => {
+    const { usuario, firebase } = useContext(FirebaseContext);
     return ( 
        <header
         css={css`
@@ -62,8 +61,13 @@ const Header = () => {
                     margin-right: 2rem;
                     `
                     }
-                   >Hola, Gabriel</p>
-                   <Boton bgColor="true">Cerrar sesión</Boton>
+                   >Hola, {usuario.displayName}</p>
+                   <Boton 
+                   bgColor="true"
+                   onClick={() => firebase.cerrarSesion()}
+                   >
+                       Cerrar sesión
+                   </Boton>
                     </>) : 
                     (<>
                     <Link href="/login">

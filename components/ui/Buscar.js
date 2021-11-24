@@ -19,7 +19,6 @@ const InputSubmit = styled.button`
     top: 1px;
     background-color: #ffffff;
     border: none;
-    text-indent:-999px;
     &:hover{
         cursor: pointer;
     }
@@ -40,7 +39,7 @@ const Buscar = () => {
             <InputSubmit 
                 type="submit"
             >
-                Buscar
+                
             </InputSubmit>
         </form>
      );

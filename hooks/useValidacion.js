@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 
 
 const useValidacion = (stateInicial, validar, fn) => {
-    const [ state, setState ] = useState([]);
     const [valores, setValores] = useState(stateInicial);
     const [errores, setErrores] = useState({});
     const [submitForm, setSubmitForm] = useState(false);
