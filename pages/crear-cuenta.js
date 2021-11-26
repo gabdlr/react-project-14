@@ -9,13 +9,14 @@ import firebase from '../firebase';
 import useValidacion from '../hooks/useValidacion';
 import validarCrearCuenta from '../validacion/validarCrearCuenta';
 
-const STATE_INICIAL = {
-    nombre: '',
-    email: '',
-    password: ''
-}
-
 const CrearCuenta = () => {
+
+    const STATE_INICIAL = {
+        nombre: '',
+        email: '',
+        password: ''
+    }
+    
     const [error, guardarError] = useState(false);
     const { valores, errores,  
     handleSubmit, handleChange } = useValidacion(STATE_INICIAL, validarCrearCuenta, crearCuenta);

@@ -9,6 +9,7 @@ const Nav = styled.nav`
         margin-left: 2rem;
         color: var(--gris2);
         font-family: 'PT sans', sans-serif;
+        text-decoration: none;
         &:last-of-type{
             margin-right: 0;
     }

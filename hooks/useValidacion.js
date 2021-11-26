@@ -21,9 +21,9 @@ const useValidacion = (stateInicial, validar, fn) => {
 
     const handleChange = e => {
         setValores({
-            ...valores,
-            [e.target.name]: e.target.value
-            });
+        ...valores,
+        [e.target.name]: e.target.value
+        });
     }
 
     const handleSubmit = e => {
