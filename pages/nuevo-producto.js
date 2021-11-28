@@ -52,10 +52,16 @@ const NuevoProducto = () => {
 
         //Insertarlo en la base de datos
 
-        firebase.crearProducto(producto, img);
-        router.push('/');
+        async function dispatch() { 
+            await firebase.crearProducto(producto, img);
+        }
+        dispatch();
+        Router.push('/');
     }
 
+    //Funcion que guarda la imagen y hace el update para la validacion
+    const loadedImage = (e) => {    guardarImg(e.target.files[0]); 
+                                    handleChange({"target": {"name":"imagenUrl", "value":"loaded"}}); }
     return ( 
     <div>
         <Layout>
@@ -105,7 +111,8 @@ const NuevoProducto = () => {
                         name="imagen"
                         //Pasan varias cosas, primero, pienso los comentarios en español y en ingles y ya no se en que idioma escribirlos
                         //segundo esto es feo, pero indoloro y eficiente
-                        onChange={e => guardarImg(e.target.files[0]), () => handleChange({"target": {"name":"imagenUrl", "value":"loaded"}}) }
+                        onChange={e => loadedImage(e) }
+                        
                     />
                 </Campo>
                 {errores.imagenUrl && <Error>{errores.imagenUrl}</Error>}
