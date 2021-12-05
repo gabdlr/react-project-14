@@ -1,14 +1,23 @@
 import { initializeApp } from 'firebase/app';
 import {createUserWithEmailAndPassword, getAuth, updateProfile, signInWithEmailAndPassword } from 'firebase/auth';
-import { collection, addDoc, orderBy, setDoc, doc, getFirestore, getDocs, query } from "firebase/firestore";
+import { collection, 
+    addDoc, 
+    orderBy, 
+    doc, 
+    getDoc, 
+    getFirestore, 
+    getDocs,
+    setDoc,
+    deleteDoc, 
+    query } from "firebase/firestore";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL  } from "firebase/storage";
 import firebaseConfig from './config';
 import { v4 as uuidv4 } from 'uuid';
-import { Router } from 'next/router';
 
 //As this course was concived in a previous version of firebase
 //the class would not make a lot of sense now, but I'm going
 //to skip the refactoring step for now
+ 
 class Firebase {
     constructor(){
         initializeApp(firebaseConfig);
@@ -54,6 +63,7 @@ class Firebase {
 
     async crearProducto(params, file){
         if(!file) return;
+        
         const storageRef = ref(this.storage, '/images/' + uuidv4());
         const uploadTask = uploadBytesResumable(storageRef, file);
         uploadTask.on(
@@ -67,11 +77,29 @@ class Firebase {
                 const imgUrl = response;
                 try {
                     params.urlImagen = imgUrl;
-                    await addDoc(collection(this.db, "productos"), params );                    
+                    addDoc(collection(this.db, "productos"), params )
+                    .then( res => {
+                        
+                    });              
                     } catch (e) {
                     throw Error (e);
                     }
-        });
+        });   
+    }
+    
+    //Que estres con usar el ingles y el español
+    async getSingle(collectionName, id) {
+        try{
+            const docRef = doc(getFirestore(), collectionName, id)
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+            return docSnap.data();
+            } else {
+            return false;
+            }
+        } catch(error){
+            throw Error(error);
+        }
     }
 
     async getAll(collectionName, order = false){
@@ -84,12 +112,38 @@ class Firebase {
                         { id: doc.id,
                         ...doc.data()})
                         });
-                        return resultados;                                   
+                        return this.resultados = resultados;                                   
         }catch(error){
             throw Error(error);
         }
     }
+
+    //Ya que lo venimos haciendo en ingles 🤷‍♂️
+    async updateDoc(collectionName, id, params) {
+        const docRef = doc(getFirestore(), collectionName, id);
+        try{
+            setDoc(docRef, params, { merge: true }).then(response => {
+                //Veremos despues que hacemos con esto si es que hacemos algo                
+                return true;
+            });
+        } catch(error){
+            throw Error(error);
+        }
+        
+    }
+
+    //Eliminar un documento/producto
+    async removeDoc(collectionName, id){
+        try{
+            await deleteDoc(doc(getFirestore(), collectionName, id));
+            return true;
+        } catch(error){
+            throw Error(error);
+        }
+        
+    }
     
+
 }
 const firebase = new Firebase();
 export default firebase;

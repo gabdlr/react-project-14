@@ -1,41 +1,14 @@
 import React from 'react';
-import { useLayoutEffect, useState, useContext } from 'react';
-import { FirebaseContext } from '../firebase';
 import Layout from '../components/layout/Layout';
-import DetalleProducto from '../components/layout/DetalleProducto';
-
+import useProductos from '../hooks/useProductos';
 const Index = () => {
-    const [productos, guardarProductos] = useState([]);
-    const { firebase } = useContext(FirebaseContext);
 
+  const content = useProductos("productos", ["creado", "desc"]);  
+  console.log("Index");
 
-    useLayoutEffect(()=>{
-      let productosFetch = true;
-      firebase.getAll("productos", ["creado", "desc"]).then( response => {
-        if(productosFetch){
-          guardarProductos(response);
-        }
-        });
-        return () => { productosFetch = false }
-    },[firebase]);
-
-    return (
+  return (
         <Layout> 
-            <div className="listado-productos">
-            <div className="contenedor">
-                <ul className="bg-white">
-                {            
-                productos.map(producto =>                
-                    (<DetalleProducto
-                      key={producto.id}
-                      producto={producto}
-                    />)
-                )
-                }
-
-                </ul>
-            </div>
-            </div> 
+          {content}
         </Layout>
      );
 }

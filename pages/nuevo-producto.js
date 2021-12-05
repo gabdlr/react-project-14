@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import Layout from '../components/layout/Layout';
 import { css } from 'styled-components';
-import Router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { Formulario, Campo, InputSubmit, Error } from '../components/ui/Formulario';
 import { FirebaseContext } from '../firebase';
 
@@ -14,9 +14,11 @@ const NuevoProducto = () => {
     const STATE_INICIAL = {
         nombre: '',
         empresa: '',
-        urlImagen: '',
+        imagenUrl: '',
         url: '',
-        descripcion: ''
+        descripcion: '',
+        creador: '',
+        votantes: []
     }
     
     //State de la imagen
@@ -24,17 +26,15 @@ const NuevoProducto = () => {
     const { valores, errores,  
     handleSubmit, handleChange } = useValidacion(STATE_INICIAL, validarCrearProducto,  crearProducto);
     
-    const { nombre, empresa, urlImagen, url, descripcion } = valores;
+    const { nombre, empresa, url, descripcion } = valores;
 
     //Hook de routing para redireccionar (esto lo habiamos hecho con Router.push🤷‍♂️)
-
     const router = useRouter();
 
-    
     //Context con las operaciones CRUD de firebase
     const {usuario, firebase} = useContext(FirebaseContext);
 
-    async function crearProducto() {
+    function crearProducto() {
         if(!usuario){
             router.push('/');
         }
@@ -47,21 +47,26 @@ const NuevoProducto = () => {
             descripcion,
             votos: 0,
             comentarios: [],
-            creado: Date.now()
+            creado: Date.now(),
+            creador: {
+                id: usuario.uid,
+                nombre: usuario.displayName
+            },
+            votantes: []
         }
 
         //Insertarlo en la base de datos
-
-        async function dispatch() { 
-            await firebase.crearProducto(producto, img);
-        }
-        dispatch();
-        Router.push('/');
+        firebase.crearProducto(producto, img);
+        //Esto claramente es piedrero
+        setTimeout(()=> {router.push('/')}, 3000);
     }
-
+    
     //Funcion que guarda la imagen y hace el update para la validacion
-    const loadedImage = (e) => {    guardarImg(e.target.files[0]); 
-                                    handleChange({"target": {"name":"imagenUrl", "value":"loaded"}}); }
+    const loadedImage = (e) => {   
+            guardarImg(e.target.files[0]); 
+            handleChange({"target": {"name":"imagenUrl", "value":"loaded"}}); 
+        }
+    
     return ( 
     <div>
         <Layout>

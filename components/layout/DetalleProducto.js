@@ -2,11 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { es } from 'date-fns/locale';
-
-const Imagen = styled.img`
-    width: 200px; 
-    height:200px;
-`;
+import Link from 'next/link';
+import ImagenProducto from '../../components/ui/ImagenProducto';
 
 const Producto = styled.li`
     padding: 4rem;
@@ -27,12 +24,16 @@ const DescripcionProducto = styled.div`
 `;
 
 const Titulo = styled.a`
+    color: #000000;
     font-size: 2rem;
     font-weight: bold;
     margin: 0;
     text-decoration: none;
     :hover{
         cursor: pointer;
+    }
+    :visited{
+        color: unset;
     }
 `;
 
@@ -85,15 +86,17 @@ padding: 1rem 3rem;
 `;
 
 const DetalleProducto = ({producto}) => {
-    const { comentarios, creado, descripcion, empresa, nombre, url, urlImagen, votos} = producto;
+    const { id, comentarios, creado, descripcion, empresa, nombre, url, urlImagen, votos } = producto;
     return ( 
         <Producto>
             <DescripcionProducto>
                 <div>
-                    <Imagen width="200px" height="200px" src={urlImagen} alt={nombre}/>
+                    <ImagenProducto width="200px" height="200px" src={urlImagen} alt={nombre}/>
                 </div>
                 <div>
-                    <Titulo>{nombre}</Titulo>
+                    <Link passHref href="/productos/[id]" as={`/productos/${id}`}>
+                        <Titulo>{nombre}</Titulo>
+                    </Link>
                     <TextoDescripcion>{descripcion}</TextoDescripcion>
                     <Comentarios>
                         <div>
