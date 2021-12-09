@@ -74,7 +74,7 @@ const Header = () => {
                     </>) : 
                     (<>
                     <Link href="/login">
-                        <Boton bgColor={true}>Login</Boton>
+                        <Boton css={css`margin-right: 1rem;`}bgColor={true}>Login</Boton>
                     </Link>
                     <Link href="/crear-cuenta">
                        <Boton>Crear Cuenta</Boton>
