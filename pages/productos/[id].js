@@ -23,12 +23,9 @@ const ContenedorProducto = styled.div`
     }
 `;
 
-//Esto es cuando siento que los styled components son un capricho estupido
-
-
 const Producto = () => {
     const { firebase, usuario } = useContext(FirebaseContext);
-   
+
     //Routing para obtener el id actual
     const router = useRouter();
     const { query: { id } } = router;
@@ -138,6 +135,7 @@ const Producto = () => {
     }
 
     const eliminarProducto = () => {
+        if(usuario === null) return;
         if(usuario.uid !== creador.id) return;
         firebase.removeDoc("productos", id)
         .then(res => router.push('/'));
@@ -159,7 +157,7 @@ const Producto = () => {
                         
                         <ImagenProducto src={urlImagen} />
                         <p>{descripcion}</p>
-                        { usuario.uid === creador.id ? 
+                        { usuario && usuario.uid === creador.id ? 
                         (<Boton
                             onClick={ eliminarProducto }
                         >Eliminar Producto

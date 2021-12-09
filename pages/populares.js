@@ -1,12 +1,16 @@
 import React from 'react';
 import Layout from '../components/layout/Layout';
-import DetalleProducto from '../components/layout/DetalleProducto';
 import useProductos from '../hooks/useProductos';
 
 const Populares = () => {
 
-  const content = useProductos("productos", ["votos", "desc"]);  
-  console.log("Populares");
+  const params = {
+    "type": "list",
+    "collectionName": "productos",
+    "orderParams": ["votos", "desc"]
+  };
+
+  const content = useProductos(params);  
 
   return (
         <Layout> 

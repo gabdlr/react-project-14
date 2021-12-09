@@ -9,7 +9,8 @@ import { collection,
     getDocs,
     setDoc,
     deleteDoc, 
-    query } from "firebase/firestore";
+    query,
+    where } from "firebase/firestore";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL  } from "firebase/storage";
 import firebaseConfig from './config';
 import { v4 as uuidv4 } from 'uuid';
@@ -59,8 +60,8 @@ class Firebase {
     }
 
     //Super feo la adaptación ya cuando haga un nuevo proyecto construire esto mas bonito
-    //Crear un producto
 
+    //Crear un producto
     async crearProducto(params, file){
         if(!file) return;
         
@@ -87,7 +88,7 @@ class Firebase {
         });   
     }
     
-    //Que estres con usar el ingles y el español
+    //Obtener un producto por su id
     async getSingle(collectionName, id) {
         try{
             const docRef = doc(getFirestore(), collectionName, id)
@@ -102,6 +103,7 @@ class Firebase {
         }
     }
 
+    //Obtener todos los productos
     async getAll(collectionName, order = false){
         try{
             const q = query(collection(this.db, collectionName), orderBy(order[0], order[1]));
@@ -118,7 +120,7 @@ class Firebase {
         }
     }
 
-    //Ya que lo venimos haciendo en ingles 🤷‍♂️
+    //Actualizar un producto
     async updateDoc(collectionName, id, params) {
         const docRef = doc(getFirestore(), collectionName, id);
         try{
@@ -141,6 +143,26 @@ class Firebase {
             throw Error(error);
         }
         
+    }
+
+    //Buscar un producto por su nombre
+    //tal vez en el futuro el operador tambien se podria pasar por parametro
+    //en el futuro en otro proyecto
+    async findDoc(collectionName, field, itemName){
+        try {
+            const q = query(collection(getFirestore(), collectionName), where(field, "==", itemName));
+            const querySnapshot = await getDocs(q);
+            let resultados = [];
+            querySnapshot.forEach((doc) => {
+                resultados.push(
+                { id: doc.id,
+                ...doc.data()})
+                });
+                return this.resultados = resultados;   
+        } catch(error){
+            throw Error(error);
+        }
+                                             
     }
     
 
